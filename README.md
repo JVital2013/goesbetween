@@ -1,6 +1,8 @@
 # GoesBetween - Goesrecv to rtl_tcp bridge
 GoesBetween connects to goesrecv, extracts IQ samples (aka "baseband"), and sends over the network via rtl_tcp. Clients like GNURadio, SDR#, SDR++, and SatDump can then connect to GoesBetween to monitor the spectrum around your satellite downlink, do parallel decoding via SatDump, and more!
 
+![Goesrecv to GoesBetween to SatDump](https://user-images.githubusercontent.com/24253715/199785651-6cda174b-3395-4f8a-a722-0dde2fb34f3d.PNG)
+
 This readme is a WIP, so check back later!
 
 ```
@@ -20,11 +22,28 @@ Options:
   -o, --outport:  RTL_TCP port for clients (default: 1234)
 ```
 
-Basic instructions:
+### Basic instructions:
 
-1. Make sure your goesrecv.conf contains a [rtlsdr.sample_publisher] or [airspy.sample_publisher] section. Scroll to the "Recommended goesrecv.conf configuration" section for details on that.
-2. Connect your SDR software to the IP address and port of goesbetween (127.0.0.1:1234 if on the same machine as goesbetween). This varies by SDR program program.
+1. Make sure your goesrecv.conf contains a [rtlsdr.sample_publisher] or [airspy.sample_publisher] section. Scroll to the "Recommended goesrecv.conf configuration" section for details on that. 
 
+    Make note of the following items from your goesrecv.conf file:
+    - sample_rate
+    - The port in the bind address for `rtlsdr.sample_publisher` or `airspy.sample_publisher`
+    - (Not in goesrecv.conf) The IP address of the computer running goesrecv
+    
+      ![goesrecv-settings](https://user-images.githubusercontent.com/24253715/199787724-c34985b4-aa27-4625-82ae-0a89d3198238.PNG)
+
+2. Invoke goesbetween from the command line, replacing the IP with the IP address of your goesrecv computer, and the port with the port of goesrecv's rtlsdr.sample_publisher: `goesbetween -H 10.0.0.2 -i 5000`.
+
+    *You can skip any parameters that match the default option, or include extra arguments as needed. For example, if you're running goesbetween on the same computer as goesrecv and the rtlsdr.sample_publisher port is 5000, you can omit all command line arguments.*
+
+3. Connect your SDR software to the IP address and RTL_TCP port of goesbetween (default port is 1234). Also make sure to match your sample rate to the sample rate found in step 2.
+
+   ![rtltcp-client-settings](https://user-images.githubusercontent.com/24253715/199792787-884ac862-a76a-4d17-aff7-2ada96bb6f4b.PNG)
+   
+4. GoesBetween can only handle one client at a time. When a client disconnects from it, another one can reconnect. Press Ctrl+C (or otherwise close GoesBetween) to exit.
+   
+***
 You won't be able to "tune" the SDR with goesbetween. It only lets you "see" the same spectrum that goesrecv sees for troubleshooting purposes. Because of this, your SDR software will not display the correct frequency, gain settings, or even tuner.
 
 While I have not tested it, this should work if you're using an AirSpy or one of the forks of goestools that work with HackRF, SoapySDR, and others.
