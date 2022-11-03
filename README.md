@@ -41,7 +41,7 @@ Options:
    
 4. GoesBetween can only handle one client at a time. When a client disconnects from it, another one can reconnect. Press Ctrl+C (or otherwise close GoesBetween) to exit.
    
-## Some words to the wise
+## Additional Notes
 If you're using goesbetween to connect goesrecv to SatDump, make sure you have a VERY stable network connection between goesrecv, goesbetween, and SatDump. SatDump requires rock-solid connection to work reliably; unstable connections can result in SatDump's deframer losing sync. Either a wired network connection or a very stable WiFi connection is required. This seems to be due to how SatDump works, not GoesBetween. I've seen the same behavior when using other networked SDRs with SatDump.
 
 You won't be able to "tune" the SDR with goesbetween. It only lets you "see" the same spectrum that goesrecv sees for troubleshooting purposes. Because of this, your SDR software will not display the correct frequency, gain settings, or even tuner.
