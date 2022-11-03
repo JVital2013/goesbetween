@@ -20,7 +20,7 @@ Options:
   -o, --outport:  RTL_TCP port for clients (default: 1234)
 ```
 
-### Basic instructions:
+## Basic instructions:
 
 1. Make sure your goesrecv.conf contains a [rtlsdr.sample_publisher] or [airspy.sample_publisher] section. Scroll to the "Recommended goesrecv.conf configuration" section for details on that. 
 
@@ -41,7 +41,9 @@ Options:
    
 4. GoesBetween can only handle one client at a time. When a client disconnects from it, another one can reconnect. Press Ctrl+C (or otherwise close GoesBetween) to exit.
    
-***
+## Some words to the wise
+If you're using goesbetween to connect goesrecv to SatDump, make sure you have a VERY stable network connection between goesrecv, goesbetween, and SatDump. SatDump requires rock-solid connection to work reliably; unstable connections can result in SatDump's deframer losing sync. Either a wired network connection or a very stable WiFi connection is required. This seems to be due to how SatDump works, not GoesBetween. I've seen the same behavior when using other networked SDRs with SatDump.
+
 You won't be able to "tune" the SDR with goesbetween. It only lets you "see" the same spectrum that goesrecv sees for troubleshooting purposes. Because of this, your SDR software will not display the correct frequency, gain settings, or even tuner.
 
 While I have not tested it, this should work if you're using an AirSpy or one of the forks of goestools that work with HackRF, SoapySDR, and others.
