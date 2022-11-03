@@ -1,6 +1,23 @@
-﻿using System.Net;
+﻿/* 
+ * Copyright 2022 Jamie Vital
+ * This software is licensed under the GNU General Public License
+ * 
+ * This file is part of goesbetween.
+ * Goesbetween is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Vitality GOES is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with goesbetween.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+using System.Net;
 using System.Net.Sockets;
-using System.Linq;
 
 class GoesBetween
 {
@@ -16,6 +33,7 @@ class GoesBetween
     static void Main(string[] args)
     {
         if(LoadSettings(args) != 0) return;
+
         Console.CancelKeyPress += delegate {
             Cleanup();
         };
@@ -51,6 +69,7 @@ class GoesBetween
                     if (currentArg == args.Length - 1)
                     {
                         Console.WriteLine("Please specify the goesrecv host IP. See --help for more\n");
+                        return 1;
                     }
 
                     //TODO: Verify valid IP
@@ -102,12 +121,12 @@ class GoesBetween
         //Wait for RTL_TCP Client
         try
         {
-            Console.WriteLine("Waiting for RTL_TCP Client...");
+            Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Waiting for RTL_TCP Client...");
             listener.Start();
             client = listener.AcceptTcpClient();
             stream = client.GetStream();
             stream.Write(magic, 0, 12);
-            Console.WriteLine("Client Connected!");
+            Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Client Connected!");
         }
         catch (Exception e)
         {
@@ -117,21 +136,21 @@ class GoesBetween
                 Console.WriteLine("\n" + e.StackTrace + "\n");
             }
 
-            Console.WriteLine("Could not connect to client");
+            Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Could not connect to client");
             return 1;
         }
 
         //Connect to goesproc
         try
         {
-            Console.WriteLine("Connecting to goesrecv host...");
+            Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Connecting to goesrecv host...");
             socket.Connect(goesrecvIP, Int32.Parse(goesrecvPort));
             socket.Send(nninit);
             socket.Receive(res);
 
             if (!Enumerable.SequenceEqual(nnires, res))
             {
-                Console.WriteLine("Could Not Connect to goesrecv host");
+                Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Invalid goesproc header");
                 return 1;
             }
         }
@@ -143,23 +162,23 @@ class GoesBetween
                 Console.WriteLine("\n" + e.StackTrace + "\n");
             }
 
-            Console.WriteLine("Could Not Connect to goesrecv host");
+            Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Could Not Connect to goesrecv host");
             return 1;
         }
 
-        Console.WriteLine("Connected to goesresv host!");
+        Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Connected to goesresv host!");
         return 0;
     }
 
     static void Transport()
     {
-        if (socket == null || stream == null) return 1;
+        if (socket == null || stream == null) return;
 
         byte[] res = new byte[8];
         byte[] dres = new byte[65536];
         byte[] buffer = new byte[65536];
 
-        Console.WriteLine("Bridging goesrecv IQ samples to RTL_TCP client...");
+        Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Bridging goesrecv IQ samples to RTL_TCP client...");
         int startReadingAt, num, remainingBytesToWrite, totalBytes = 0, bytesBeforeHeader = 0;
         do
         {
@@ -202,7 +221,7 @@ class GoesBetween
                     Console.WriteLine("\n" + e.StackTrace + "\n");
                 }
                 
-                Console.WriteLine("goesrecv disconnected. Exiting");
+                Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Connection to goesrecv closed");
                 return;
             }
 
@@ -218,7 +237,7 @@ class GoesBetween
                     Console.WriteLine("\n" + e.StackTrace + "\n");
                 }
 
-                Console.WriteLine("RTL_TCP client disconnected. Exiting");
+                Console.WriteLine("[" + DateTime.Now.ToString("G") + "] RTL_TCP client disconnected");
                 return;
             }
 
@@ -226,7 +245,7 @@ class GoesBetween
 
         } while (num != 0);
 
-        Console.WriteLine("Connection to goesrecv closed");
+        Console.WriteLine("[" + DateTime.Now.ToString("G") + "] Connection to goesrecv closed");
     }
 
     static void Cleanup()
@@ -238,7 +257,7 @@ class GoesBetween
 
     static void Help()
     {
-        Console.WriteLine("goesbetween 0.0.2 - 2022 Jamie Vital");
+        Console.WriteLine("goesbetween 0.9 - 2022 Jamie Vital");
         Console.WriteLine("Bridges IQ samples from goesrecv to any RTL_TCP client\n");
         Console.WriteLine("Example usage:\n");
         Console.WriteLine("  Defaults:               ./goesbetween");
