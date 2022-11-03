@@ -1,9 +1,7 @@
 # GoesBetween - Goesrecv to rtl_tcp bridge
-GoesBetween connects to goesrecv, extracts IQ samples (aka "baseband"), and sends over the network via rtl_tcp. Clients like GNURadio, SDR#, SDR++, and SatDump can then connect to GoesBetween to monitor the spectrum around your satellite downlink, do parallel decoding via SatDump, and more!
+GoesBetween connects to goesrecv, extracts raw IQ samples (aka "the baseband") from it, and sends the samples over the network via rtl_tcp. Clients like GNURadio, SDR#, SDR++, and SatDump can connect to GoesBetween to monitor the spectrum around your satellite downlink, do parallel decoding via SatDump, and more!
 
 ![Goesrecv to GoesBetween to SatDump](https://user-images.githubusercontent.com/24253715/199785651-6cda174b-3395-4f8a-a722-0dde2fb34f3d.PNG)
-
-This readme is a WIP, so check back later!
 
 ```
 Example usage:
