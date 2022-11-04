@@ -2,13 +2,13 @@
  * Copyright 2022 Jamie Vital
  * This software is licensed under the GNU General Public License
  * 
- * This file is part of goesbetween.
+ * This file is part of GoesBetween.
  * Goesbetween is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Vitality GOES is distributed in the hope that it will be useful,
+ * GoesBetween is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -72,10 +72,16 @@ class GoesBetween
                         return 1;
                     }
 
-                    //TODO: Verify valid IP
+                    IPAddress? testAddress;
+                    if (!IPAddress.TryParse(args[currentArg + 1], out testAddress))
+                    {
+                        Console.WriteLine(args[currentArg + 1] + " is not a valid IP. See --help for more\n");
+                        return 1;
+                    }
+
                     goesrecvIP = args[currentArg + 1];
                     break;
-
+                        
                 case "-i":
                 case "--inport":
                     if (currentArg == args.Length - 1)
@@ -84,7 +90,13 @@ class GoesBetween
                         return 1;
                     }
 
-                    //TODO: Verify valid port
+                    int testIn;
+                    if (!int.TryParse(args[currentArg + 1], out testIn))
+                    {
+                        Console.WriteLine(args[currentArg + 1] + " is not a valid port. See --help for more\n");
+                        return 1;
+                    }
+
                     goesrecvPort = args[currentArg + 1];
                     break;
 
@@ -96,7 +108,13 @@ class GoesBetween
                         return 1;
                     }
 
-                    //TODO: Verify valid port
+                    int testOut;
+                    if (!int.TryParse(args[currentArg + 1], out testOut))
+                    {
+                        Console.WriteLine(args[currentArg + 1] + " is not a valid port. See --help for more\n");
+                        return 1;
+                    }
+
                     rtltcpPort = args[currentArg + 1];
                     break;
             }
@@ -257,7 +275,7 @@ class GoesBetween
 
     static void Help()
     {
-        Console.WriteLine("goesbetween 0.9 - 2022 Jamie Vital");
+        Console.WriteLine("goesbetween 1.0 - 2022 Jamie Vital");
         Console.WriteLine("Bridges IQ samples from goesrecv to any RTL_TCP client\n");
         Console.WriteLine("Example usage:\n");
         Console.WriteLine("  Defaults:               ./goesbetween");
@@ -268,7 +286,7 @@ class GoesBetween
         Console.WriteLine("Options:\n");
         Console.WriteLine("  -d, --debug:    Print debugging statements on error");
         Console.WriteLine("  -h, --help:     Display this help page");
-        Console.WriteLine("  -H, --host:     goesrecv IPv4 address (default: 127.0.0.1)");
+        Console.WriteLine("  -H, --host:     goesrecv IP address (default: 127.0.0.1)");
         Console.WriteLine("  -i, --inport:   goesrecv sample publisher port (default: 5000)");
         Console.WriteLine("  -o, --outport:  RTL_TCP port for clients (default: 1234)\n");
     }
