@@ -213,7 +213,6 @@ class GoesBetween
                     //Write Information before header
                     if (bytesBeforeHeader > 0)
                     {
-                        stream.Write(dres, startReadingAt, bytesBeforeHeader);
                         Buffer.BlockCopy(dres, startReadingAt, buffer, totalBytes, bytesBeforeHeader);
                         totalBytes += bytesBeforeHeader;
                     }
@@ -275,7 +274,7 @@ class GoesBetween
 
     static void Help()
     {
-        Console.WriteLine("goesbetween 1.0 - 2022 Jamie Vital");
+        Console.WriteLine("goesbetween 1.0.1 - 2022 Jamie Vital");
         Console.WriteLine("Bridges IQ samples from goesrecv to any RTL_TCP client\n");
         Console.WriteLine("Example usage:\n");
         Console.WriteLine("  Defaults:               ./goesbetween");
